@@ -114,7 +114,9 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR/'static']
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# import os
-
-# MEDIA_URL = '/media/'
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MAILER
+EMAIL_HOST = 'smtp.google.com'
+EMAIL_PORT = 587
+EMAIL_USE_TSL = True
+EMAIL_HOST_USER = '' # your email here
+EMAIL_HOST_PASSWORD = '' # your app password here

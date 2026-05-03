@@ -3,12 +3,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.views.generic import View, CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.contrib.auth.models import User
-from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from .forms import UserReg, UserAuthentication
 from .models import Material
 from .models import Subject, Material
-from .serializers import SubjectSerializer, MaterialSerializer
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.db import IntegrityError
+# from django.contrib import messages
+# from .serializers import SubjectSerializer, MaterialSerializer
 # from rest_framework.views import APIView
 # from rest_framework.response import Response
 
@@ -20,13 +24,14 @@ class UserRegView(View):
   def post(self, request:HttpRequest) -> HttpResponse:
     form = UserReg(request.POST)
     if form.is_valid():
-      user = User.objects.create_user(**form.cleaned_data)
-      user.is_active = True
-      print(f"--- Registration Successful: {user.username} ---")            
-      messages.success(request, f"Registration complete for {user.username}! Please log in.")
-      user.save()
-      return HttpResponseRedirect('/login/')
-    return HttpResponseRedirect('/')
+      try:
+        user = User.objects.create_user(**form.cleaned_data)
+        sendMail(user.username) #mailer
+        return HttpResponseRedirect('/login/')      
+      except IntegrityError:
+        form.add_error('username', 'This username is already taken. Please try another.')
+    # return HttpResponseRedirect('/')
+    return render(request, 'auth.html', context={"page_name": "Registration", "btn_name": "Register", "form": form, 'is_login': False})
   
 class UserAuthenticateView(View):
   def get(self, request:HttpRequest) -> HttpResponse:
@@ -73,6 +78,18 @@ class MaterialUpdateView(UpdateView):
   model = Material
   success_url = '/'
   fields = ['subject', 'title', 'file']
+
+def sendMail(username):
+  subject = 'Important notification about Registration'
+  fromMail = 'webmaster@localhost' # from
+  to = 'newuser@example.com' # to
+
+  context = {'user_name': username}
+  htmlContent = render_to_string('successful.html', context)
+  textContent = strip_tags(htmlContent)
+  msg = EmailMultiAlternatives(subject, textContent, fromMail, [to])
+
+  msg.send()
 
 
 # class SubjectListAPIView(APIView):
