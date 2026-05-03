@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}{% if form.instance.pk %}Edit{% else %}Create{% endif %} Material{% endblock %}
+
+{% block content %}
+<style>
+  .form-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-width: 500px;
+    margin: 2rem auto;
+  }
+
+  .form-card h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #2d3436;
+    text-align: center;
+  }
+
+  /* Target the Django form layout */
+  form p {
+    margin-bottom: 1.2rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    color: #636e72;
+  }
+
+  /* Style all inputs including the file picker */
+  input[type="text"],
+  input[type="file"],
+  select,
+  textarea {
+    padding: 10px;
+    border: 1px solid #dfe6e9;
+    border-radius: 6px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  input[type="file"] {
+    padding: 8px;
+    background: #f8f9fa;
+    border: 1px dashed #b2bec3;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+  }
+
+  .btn-submit {
+    width: 100%;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 10px;
+  }
+
+  .btn-submit:hover {
+    background-color: #357abd;
+  }
+
+  .back-link {
+    display: block;
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #636e72;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="form-card">
+  <h2>{% if form.instance.pk %}Update{% else %}New{% endif %} Material</h2>
+  
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    {# Using .as_p to ensure our CSS selectors above work perfectly #}
+    {{ form.as_p }}
+    
+    <button type="submit" class="btn-submit">Save Material</button>
+  </form>
+
+  <a href="/" class="back-link">← Cancel and go back</a>
+</div>
+{% endblock %}

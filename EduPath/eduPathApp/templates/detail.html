@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}{{ object.title }}{% endblock %}
+
+{% block content %}
+<style>
+  .detail-container {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    max-width: 700px;
+    margin: 2rem auto;
+  }
+
+  .meta-info {
+    color: #636e72;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  h1 {
+    margin: 0 0 0.5rem 0;
+    color: #2d3436;
+    font-size: 2rem;
+  }
+
+  h2 {
+    margin: 0 0 1.5rem 0;
+    color: #4a90e2;
+    font-weight: 500;
+  }
+
+  .image-wrapper {
+    width: 100%;
+    text-align: center;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-bottom: 1.5rem;
+  }
+
+  .material-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .timestamp {
+    color: #b2bec3;
+    font-size: 0.85rem;
+    font-style: italic;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+    margin-top: 2rem;
+  }
+
+  .action-bar {
+    margin-top: 2rem;
+    display: flex;
+    gap: 15px;
+  }
+
+  .btn-back {
+    text-decoration: none;
+    color: #636e72;
+    font-weight: 600;
+  }
+</style>
+
+<div class="detail-container">
+  <span class="meta-info">Subject: {{ object.subject }}</span>
+  <h1>{{ object.title }}</h1>
+  <div class="image-wrapper">
+    {% if object.file %}
+      <img src="{{ object.file.url }}" alt="{{ object.title }}" class="material-img">
+    {% else %}
+      <p style="color: #999;">No image/file uploaded.</p>
+    {% endif %}
+  </div>
+  <div class="timestamp">
+    Uploaded on: {{ object.created_at|date:"F j, Y" }}
+  </div>
+  <div class="action-bar">
+    <a href="/" class="btn-back">← Back to List</a>
+    <a href="/material/edit/{{ object.id }}" style="color: #4a90e2; font-weight: 600; text-decoration: none;">Edit Material</a>
+  </div>
+</div>
+{% endblock %}
